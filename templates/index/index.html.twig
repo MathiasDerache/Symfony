@@ -18,6 +18,7 @@
             <th>Disponibilité</th>
             <th>Suppression</th>
             <th>Modification</th>
+            <th>Détail</th>
         </tr>
         {% for produits in produits %}
             <tr>
@@ -27,6 +28,7 @@
                 <td>{{ produits.stock }}</td>
                 <td><a href="/delete/{{ produits.id }}"><button type="button" class="btn btn-primary">Supprimer</button></a></td>
                 <td><a href="/update/{{ produits.id }}"><button type="button" class="btn btn-primary">Modifier</button></a></td>
+                <td><a href="/detail/{{ produits.id }}"><button type="button" class="btn btn-primary">Détail</button></a></td>
             </tr>
         {% endfor %}
 

@@ -6,4 +6,12 @@
 
 {% block body %}
     <h1>{{detail}}</h1>
+    <br><br>
+    <div class="container ">
+        <h4>Désignation :{{ produits.designation }}</h4><br>
+        <h4>Prix : {{produits.prix}}</h4><br>
+        <h4>stock : {{produits.stock}}</h4>
+    </div>
+    <a href="/"><button type="button" class="btn btn-primary">Retour</button><a>
+    
 {% endblock %}

@@ -85,19 +85,13 @@ class IndexController extends AbstractController
     }
 
         /**
-     *@Route("/read", name="read") 
+     *@Route("/detail/{id}", name="detail") 
      */
-    public function read() : Response {
-        return $this->render('index/read.html.twig',
-        ["read" => "Afficher tous les produits"]);
-    }
-
-        /**
-     *@Route("/detail", name="detail") 
-     */
-    public function detail() : Response {
+    public function detail(int $id, CrudInterface $crud) : Response {
+        $produits = $crud->find($id);
         return $this->render("index/detail.html.twig", [
-            "detail" => "Affichage du détail du produit"
+            "detail" => "Affichage du détail du produit",
+            "produits" => $produits
         ]);
     }
 
