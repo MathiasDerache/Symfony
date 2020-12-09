@@ -6,6 +6,8 @@ use App\Entity\Produit;
 use App\Service\CrudInterface;
 use App\Repository\ProduitRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Exception\DriverException;
+use App\Service\Exception\ProduitServiceException;
 
 class ProduitService implements CrudInterface{
 
@@ -20,14 +22,23 @@ class ProduitService implements CrudInterface{
 
     public function searchAll()
     {
-        $produits = $this->repository->findAll();
-        return $produits;
+        try{
+            $produits = $this->repository->findAll();
+            return $produits;
+        }catch(DriverException $e){
+            throw new ProduitServiceException("Problème technique rencontré. Veuillez réeesayer.", $e->getCode());
+        } 
     }
 
     public function remove($produits)
     {
-        $this->manager->remove($produits);
-        $this->manager->flush();
+        try{
+            $this->manager->remove($produits);
+            $this->manager->flush();
+        }
+        catch(DriverException $e){
+            throw new ProduitServiceException("Problème technique rencontré. Veuillez réeesayer.", $e->getCode());
+        }
     }
 
 

@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Exception\ProduitServiceException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,10 +23,19 @@ class IndexController extends AbstractController
      * @Route("/", name="index")
      */
     public function index(ProduitService $produitService): Response
-    {
-        $produits = $produitService->searchAll();
+    { 
+        try{
+            $produits = $produitService->searchAll();
+
+        }catch(ProduitServiceException $e){
+            return $this->render('index/index.html.twig', [
+                "produits" => [],
+                "error" => $e->getCode(). ": " . $e->getMessage()
+            ]);
+        }
         return $this->render('index/index.html.twig', [
-            'produits' => $produits
+            'produits' => $produits,
+            'error' => NULL
         ]);
     } 
 
@@ -55,11 +65,14 @@ class IndexController extends AbstractController
     */
     public function delete(int $id, CrudInterface $crud): Response
     {
-        $produit = $crud->find($id);
-
-        $crud->remove($produit);
-
-        return $this->redirect("/");
+        try{
+            $produit = $crud->find($id);
+            $crud->remove($produit);
+            return $this->redirect("/");
+        }
+        catch(ProduitServiceException $e){
+            $error = $e->getCode(). ": " . $e->getMessage();
+            }
     }
 
         /**
