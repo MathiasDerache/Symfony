@@ -1,22 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modification du produit{% endblock %}
+{% block title %}Modification du produit
+{% endblock %}
 
 {% block body %}
 
-    <div class="titre">
-        <h1>MODIFICATION DU PRODUIT</h1>
-    </div>
-    <div class="container">
-        <div class="form">
-            {{ form_start(form) }}
-                {{ form_row(form.designation, {'value':produits.designation}) }}
-                {{ form_row(form.prix, {'value':produits.prix}) }}
-                {{ form_row(form.stock) }}
-                {{ form_row(form.save) }}
-            {{ form_end(form) }}
-        </div>
-    </div>
+	<div class="titre">
+		<h1>MODIFICATION DU PRODUIT</h1>
+	</div>
+	{% if error %}
+		<div class="alert alert-danger" role="alert">{{error}}</div>
+	{% endif %}
+	<div class="container">
+		<div class="form">
+			{{ form_start(form) }}
+			{{ form_row(form.designation, {'value':produits.designation}) }}
+			{{ form_row(form.prix, {'value':produits.prix}) }}
+			{{ form_row(form.stock) }}
+			{{ form_row(form.save) }}
+			{{ form_end(form) }}
+		</div>
+	</div>
 
 
 {% endblock %}

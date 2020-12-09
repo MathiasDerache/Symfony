@@ -56,8 +56,13 @@ class ProduitService implements CrudInterface{
 
     public function update($produits, $produit)
     {   
-        $produits->setDesignation($produit->getDesignation())->setPrix($produit->getPrix());
-        $this->manager->flush();
+        try{
+            $produits->setDesignation($produit->getDesignation())->setPrix($produit->getPrix());
+            $this->manager->flush();
+        }
+        catch(DriverException $e){
+            throw new ProduitServiceException("Problème technique rencontré. Veuillez réeesayer.", $e->getCode());
+        }
     }
 
     public function modify(Produit $produits, Produit $produit)

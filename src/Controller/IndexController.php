@@ -92,21 +92,32 @@ class IndexController extends AbstractController
      */
     public function update(int $id, CrudInterface $crud, Request $request): Response
     {
-        $produits = $crud->find($id);
+        try{
+            $produits = $crud->find($id);
 
-        $produit = new Produit();
-
-        $form = $this->createForm(ProduitType::class, $produit);
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $crud->modify($produits,$produit);
-            return $this->redirect("/");
+            $produit = new Produit();
+    
+            $form = $this->createForm(ProduitType::class, $produit);
+    
+            $form->handleRequest($request);
+    
+            if($form->isSubmitted() && $form->isValid()){
+                $crud->modify($produits,$produit);
+                return $this->redirect("/");
+            }
         }
-
-
-        return $this->render('index/update.html.twig', ['form'=> $form->createView(), "produits" => $produits]);
+        catch(ProduitServiceException $e){
+            return $this->render('index/update.html.twig', [
+                'form'=> $form->createView(), 
+                "produits" => $produits,
+                "error" => $e->getCode(). ": " . $e->getMessage()
+            ]);
+        }
+        return $this->render('index/update.html.twig', [
+            'form'=> $form->createView(), 
+            "produits" => $produits,
+            'error' => NULL
+        ]);
     }
 
         /**
