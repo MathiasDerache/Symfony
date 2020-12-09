@@ -55,7 +55,7 @@ class ProduitService implements CrudInterface{
     }
 
     public function update($produits, $produit)
-    {
+    {   
         $produits->setDesignation($produit->getDesignation())->setPrix($produit->getPrix());
         $this->manager->flush();
     }

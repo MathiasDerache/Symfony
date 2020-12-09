@@ -45,19 +45,29 @@ class IndexController extends AbstractController
 
     public function create(Request $request, EntityManagerInterface $manager) : Response {
 
-        $produits = new Produit();
+        try{
+            $produits = new Produit();
 
-        $form = $this->createForm(ProduitType::class, $produits);
-
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-
-            $manager->persist($produits);
-            $manager->flush();
-            return $this->redirect("/");
+            $form = $this->createForm(ProduitType::class, $produits);
+    
+            $form->handleRequest($request);
+            if($form->isSubmitted() && $form->isValid()){
+    
+                $manager->persist($produits);
+                $manager->flush();
+                return $this->redirect("/");
+            }
         }
-        return $this->render('index/create.html.twig', 
-        ['form' => $form->createView()]);
+        catch(ProduitServiceException $e){
+            return $this->render('index/index.html.twig', [
+                "produits" => [],
+                "error" => $e->getCode(). ": " . $e->getMessage()
+            ]);
+        }
+        return $this->render('index/create.html.twig', [
+            'form' => $form->createView(),
+            'error' => NULL
+        ]);
     }
 
         /**
@@ -71,8 +81,10 @@ class IndexController extends AbstractController
             return $this->redirect("/");
         }
         catch(ProduitServiceException $e){
-            $error = $e->getCode(). ": " . $e->getMessage();
-            }
+            return $this->render('index/index.html.twig', [
+                "error" => $e->getCode(). ": " . $e->getMessage()
+            ]);
+        }
     }
 
         /**
